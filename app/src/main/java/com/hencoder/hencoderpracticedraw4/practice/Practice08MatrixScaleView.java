@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
@@ -17,6 +18,9 @@ public class Practice08MatrixScaleView extends View {
     Bitmap bitmap;
     Point point1 = new Point(200, 200);
     Point point2 = new Point(600, 200);
+    private int bitmapHeight;
+    private int bitmapWidth;
+    Matrix matrix = new Matrix();
 
     public Practice08MatrixScaleView(Context context) {
         super(context);
@@ -30,15 +34,27 @@ public class Practice08MatrixScaleView extends View {
         super(context, attrs, defStyleAttr);
     }
 
+
     {
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
+        bitmapWidth = bitmap.getWidth();
+        bitmapHeight = bitmap.getHeight();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        canvas.save();
+        matrix.setScale(1.2f, 1.2f, point1.x + bitmapWidth, point1.y + bitmapHeight);
+        canvas.concat(matrix);
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+        canvas.restore();
+
+        canvas.save();
+        matrix.setScale(0.6f, 1.6f, point2.x + bitmapWidth / 2, point2.y + bitmapHeight / 2);
+        canvas.concat(matrix);
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+        canvas.restore();
     }
 }
